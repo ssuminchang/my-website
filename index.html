@@ -149,10 +149,35 @@ section{padding:0 2.5rem;}
     display: none;
   }
 
+  /* Mobile nav spacing */
+  nav {
+    padding: .9rem 1rem;
+  }
+
+  .nav-logo {
+    font-size: .78rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .text-logo {
+    margin-right: .18rem;
+  }
+
+  .nav-links {
+    gap: .55rem;
+    flex-shrink: 1;
+  }
+
+  .nav-links a {
+    font-size: .58rem;
+    letter-spacing: .04em;
+  }
+
   .projects-grid {
     grid-template-columns: 1fr;
   }
-
+  
   .project-card {
     border-right: none;
     border-bottom: var(--border);
@@ -321,7 +346,7 @@ section{padding:0 2.5rem;}
 <body>
 <div id="cursor"></div>
 <nav>
-  <div class="nav-logo"><span class="text-logo">◡̈</span> Jasmine Chang</div>
+  <div class="nav-logo"><span class="text-logo">◡̈</span> Jasmine</div>
   <div class="nav-links">
     <a href="#work">Work</a>
     <a href="#about">About</a>
