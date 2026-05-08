@@ -110,7 +110,218 @@ section{padding:0 2.5rem;}
 .contact-copy{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;opacity:.4;font-family:var(--display);}
 .reveal{opacity:0;transform:translateY(30px);transition:opacity .6s,transform .6s;}
 .reveal.visible{opacity:1;transform:none;}
+
+@media (max-width: 768px) {
+  body {
+    cursor: auto;
+  }
+
+  #cursor {
+    display: none;
+  }
+
+  nav {
+    padding: 1rem 1.2rem;
+  }
+
+  .nav-logo {
+    font-size: .85rem;
+  }
+
+  .nav-links {
+    gap: 1rem;
+  }
+
+  .nav-links a {
+    font-size: .68rem;
+    cursor: pointer;
+  }
+
+  section {
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
+  }
+
+  #hero {
+    min-height: 86vh;
+    padding-bottom: 2.5rem;
+  }
+
+  .hero-tag {
+    margin-top: 5rem;
+    font-size: .68rem;
+    line-height: 1.5;
+  }
+
+  .hero-title {
+    font-size: clamp(3.2rem, 18vw, 5rem);
+    line-height: .95;
+  }
+
+  .hero-sub {
+    display: block;
+    font-size: .72rem;
+    line-height: 1.6;
+  }
+
+  .hero-scroll {
+    margin-top: 1rem;
+  }
+
+  #work,
+  #about,
+  #contact {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .section-header {
+    margin-bottom: 1.8rem;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-card {
+    border-right: none;
+    border-bottom: var(--border);
+    padding: 1.6rem 1.2rem;
+    cursor: pointer;
+  }
+
+  .project-card:last-child {
+    border-bottom: none;
+  }
+
+  .proj-name {
+    font-size: 1.45rem;
+    line-height: 1.1;
+  }
+
+  .proj-desc {
+    font-size: .86rem;
+    line-height: 1.7;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-left {
+    border-right: none;
+    border-bottom: var(--border);
+    padding: 2rem 0;
+  }
+
+  .about-right {
+    padding: 2rem 0 0;
+  }
+
+  .about-big {
+    font-size: 1.5rem;
+    line-height: 1.15;
+  }
+
+  .about-body {
+    font-size: .92rem;
+    line-height: 1.85;
+  }
+
+  .modal-overlay {
+    align-items: flex-end;
+  }
+
+  .modal {
+    width: 100vw;
+    max-height: 92vh;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+  }
+
+  .modal-topbar {
+    padding: 1rem 1.1rem;
+  }
+
+  .modal-hero {
+    padding: 1.5rem 1.1rem;
+  }
+
+  .modal-name {
+    font-size: 1.65rem;
+    line-height: 1.05;
+  }
+
+  .tldr-block {
+    margin: 1rem;
+    padding: 1.1rem;
+  }
+
+  .tldr-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .flow-block {
+    margin: 0 1rem 1rem;
+    padding: 1rem;
+  }
+
+  .flow-step {
+    flex-direction: column;
+    gap: .45rem;
+    align-items: flex-start;
+    padding: .85rem 1rem;
+  }
+
+  .modal-sections {
+    padding: 0 1rem 1.5rem;
+  }
+
+  .m-body,
+  .m-bullet-list li,
+  .bullet-text {
+    font-size: .86rem;
+    line-height: 1.8;
+  }
+
+  .contact-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+
+  .contact-link {
+    cursor: pointer;
+    font-size: .72rem;
+    line-height: 1.5;
+    align-items: flex-start;
+  }
+
+  .contact-copy {
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-links {
+    gap: .75rem;
+  }
+
+  .nav-links a {
+    font-size: .62rem;
+  }
+
+  .hero-title {
+    font-size: clamp(3rem, 19vw, 4.5rem);
+  }
+
+  .contact-big {
+    font-size: clamp(2.4rem, 18vw, 4rem);
+  }
+}
 </style>
+  
 </head>
 <body>
 <div id="cursor"></div>
