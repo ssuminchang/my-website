@@ -127,6 +127,71 @@ section{padding:0 2.5rem;}
   .about-grid {
     grid-template-columns: 1fr;
   }
+
+  /* Project modal mobile improvements */
+  .modal-overlay {
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .modal {
+    width: 100vw;
+    max-width: 100vw;
+    max-height: 92vh;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    border-radius: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .modal-topbar {
+    padding: 1rem 1.1rem;
+    gap: 1rem;
+  }
+
+  .modal-close {
+    cursor: pointer;
+    font-size: .65rem;
+    padding: .4rem .7rem;
+    flex-shrink: 0;
+  }
+
+  .modal-hero {
+    padding: 1.4rem 1.1rem;
+  }
+
+  .modal-name {
+    font-size: 1.65rem;
+    line-height: 1.05;
+  }
+
+  .tldr-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .flow-block {
+    margin: 0 1rem 1rem;
+    padding: 1rem;
+  }
+
+  .flow-step {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .45rem;
+  }
+
+  .modal-sections {
+    padding: 0 1rem 1.5rem;
+  }
+
+  .modal [style*="grid-template-columns:1fr 1fr"],
+  .modal [style*="grid-template-columns:1fr 1fr 1fr"],
+  .modal [style*="grid-template-columns: 1fr 1fr"],
+  .modal [style*="grid-template-columns: 1fr 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 </style>
