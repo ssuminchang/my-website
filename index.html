@@ -18,6 +18,11 @@ body{background:var(--warm);color:var(--black);font-family:var(--body);cursor:no
 #cursor.hover{width:40px;height:40px;background:var(--accent);border-color:var(--accent);opacity:.5;}
 nav{position:fixed;top:0;left:0;right:0;padding:1.2rem 2.5rem;display:flex;justify-content:space-between;align-items:center;border-bottom:var(--border);background:var(--warm);z-index:100;}
 .nav-logo{font-family:var(--display);font-size:1rem;font-weight:700;}
+.text-logo{
+  letter-spacing:0;
+  margin-right:.25rem;
+  color:var(--accent);
+}
 .nav-links{display:flex;gap:2rem;}
 .nav-links a{font-family:var(--body);font-size:.8rem;text-decoration:none;color:var(--black);text-transform:uppercase;letter-spacing:.1em;cursor:none;}
 .nav-links a:hover{color:var(--accent);}
@@ -316,7 +321,7 @@ section{padding:0 2.5rem;}
 <body>
 <div id="cursor"></div>
 <nav>
-  <div class="nav-logo">JC—Portfolio</div>
+  <div class="nav-logo"><span class="text-logo">◡̈</span> Jasmine Chang</div>
   <div class="nav-links">
     <a href="#work">Work</a>
     <a href="#about">About</a>
