@@ -46,8 +46,8 @@
   --border:2px solid var(--text);
   --border-light:1px solid var(--divider);
   /* Typography */
-  --display:'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
-  --body:'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  --display:'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --body:'Inter', 'Helvetica Neue', Arial, sans-serif;
   /* Typography scale */
   --text-3xs:.55rem;
   --text-2xs:.58rem;
