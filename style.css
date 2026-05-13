@@ -652,6 +652,27 @@ section{
   border:1px solid var(--divider);
 }
 
+.collaboration-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: .6rem;
+  margin-top: .75rem;
+}
+
+.outcome-grid {
+  display: grid;
+  gap: .6rem;
+  margin-top: .5rem;
+}
+
+.outcome-grid-2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.outcome-grid-3 {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
 .m-bullet-list{
   list-style:none;
   margin-top:.75rem;
@@ -1081,6 +1102,12 @@ section{
     padding:0 1rem 1.5rem;
   }
 
+  .collaboration-grid,
+.outcome-grid-2,
+.outcome-grid-3 {
+  grid-template-columns: 1fr;
+}
+  
   /* Mobile Product section: stack cover and details so the modal stays readable. */
   .product-panel{
     grid-template-columns:1fr;
