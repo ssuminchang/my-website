@@ -316,7 +316,7 @@ function renderSection(s) {
         }
     }
     if (s.infraGroups) {
-        inner += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.75rem;">';
+        inner += <div class="outcome-grid outcome-grid-3">;
         for (var i = 0; i < s.infraGroups.length; i++) {
             var g = s.infraGroups[i];
             var gtags = '';
