@@ -380,7 +380,7 @@ function renderModal(p) {
             gHtml += '<div style="padding:1.25rem 1rem;border:' + (hi ? '2px solid var(--text)' : '1px solid var(--divider)') + ';background:' + (hi ? 'var(--primary)' : 'transparent') + ';color:' + (hi ? 'var(--surface)' : 'var(--text)') + ';"><div style="font-family:var(--display);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.15em;color:' + (hi ? 'var(--highlight)' : 'var(--primary-soft)') + ';margin-bottom:.6rem;">' + (i + 1) + '. ' + g.label + '</div>' + iHtml + (g.chips ? '<div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem;">' + g.chips.map(function (c) { return '<span style="font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.08em;padding:.2rem .55rem;border:1px solid var(--hover-border-muted);color:var(--surface);">' + c + '</span>'; }).join('') + '</div>' : '') + '</div>';
         }
         
-      outcomeHtml = '<div class="m-section"><div class="m-sec-label">Execution Outcome</div><div class="m-sec-title">執行成果</div><div style="display:grid;grid-template-columns:' + (o.groups.length === 3 ? '1fr 1fr 1fr' : '1fr 1fr') + ';gap:.6rem;margin-top:.5rem;">' + gHtml + '</div></div>';
+      outcomeHtml = '<div class="m-section"><div class="m-sec-label">Execution Outcome</div><div class="m-sec-title">執行成果</div><div class="outcome-grid ' + (o.groups.length === 3 ? 'outcome-grid-3' : 'outcome-grid-2') + '">' + gHtml + '</div></div>';
     }
     else {
         outcomeHtml =
