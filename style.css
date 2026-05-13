@@ -1103,10 +1103,11 @@ section{
   }
 
   .collaboration-grid,
-.outcome-grid-2,
-.outcome-grid-3 {
-  grid-template-columns: 1fr;
-}
+  .outcome-grid-2,
+  .outcome-grid-3 {
+    grid-template-columns: 1fr;
+    gap: .9rem;
+  }
   
   /* Mobile Product section: stack cover and details so the modal stays readable. */
   .product-panel{
