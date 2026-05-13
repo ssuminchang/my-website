@@ -369,8 +369,8 @@ function renderModal(p) {
     }
     var o = p.outcome;
     var outcomeHtml = '';
+    var gHtml = '';
     if (o.custom) {
-        var gHtml = '';
         for (var i = 0; i < o.groups.length; i++) {
             var g = o.groups[i];
             var hi = g.highlight;
