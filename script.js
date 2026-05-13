@@ -316,7 +316,7 @@ function renderSection(s) {
         }
     }
     if (s.infraGroups) {
-        inner += <div class="outcome-grid outcome-grid-3">;
+        inner += '<div class="outcome-grid outcome-grid-3">';
         for (var i = 0; i < s.infraGroups.length; i++) {
             var g = s.infraGroups[i];
             var gtags = '';
