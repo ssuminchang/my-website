@@ -421,7 +421,15 @@ function renderModal(p) {
             flowHtml + '<div class="modal-sections">' + sectionsHtml + outcomeHtml + productHtml + '</div>';
 }
 // Opens a modal for the project at index i.
-function openModal(i) { renderModal(projects[i]); document.getElementById('modal').classList.add('active'); document.body.style.overflow = 'hidden'; }
+function openModal(i) {
+  renderModal(projects[i]);
+  var modalBox = document.getElementById('modal-box');
+  if (modalBox) {
+    modalBox.scrollTop = 0;
+  }
+  document.getElementById('modal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
 // Closes the modal and restores page scrolling.
 function closeModal() { document.getElementById('modal').classList.remove('active'); document.body.style.overflow = ''; }
 // Closes the modal when the user clicks the dark overlay, but not when clicking inside the modal box.
