@@ -297,7 +297,7 @@ function renderSection(s) {
             { bg: 'var(--primary)', color: 'var(--surface)', border: 'var(--primary)', lc: 'var(--highlight)' },
             { bg: 'var(--highlight)', color: 'var(--text)', border: 'var(--highlight-border)', lc: 'var(--highlight-text)' }
         ];
-        inner += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;margin-top:.75rem;">';
+      inner += '<div class="collaboration-grid">';  
         for (var i = 0; i < s.collaboration.length; i++) {
             var c = s.collaboration[i];
             var st = colStyles[i];
