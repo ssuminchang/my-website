@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Jasmine Chang</title>
-<meta name="description" content="Portfolio of Jasmine Chang, focused on product strategy, UX research, AI workflow design, and human-centered product experiences.">
+<meta name="description" content="Portfolio of Jasmine Chang — Product Strategist and Senior UX Researcher specializing in AI workflow design and human-centered product experiences.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
@@ -36,14 +36,14 @@
   </div>
 </section>
 
-<!-- WORK: project cards. These cards open the modal through onclick="openModal(index)". -->
+<!-- WORK: project cards. Cards use data-modal-index; click/keydown is bound in script.js. -->
 <section id="work">
   <div class="section-header">
     <span class="section-num">01 /</span>
     <span class="section-title-label">Selected Work</span>
   </div>
   <div class="projects-grid">
-    <div class="project-card reveal" onclick="openModal(0)" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal(0)}">
+    <div class="project-card reveal" data-modal-index="0" role="button" tabindex="0">
       <div class="proj-num">Project 001</div>
       <div class="proj-capability">Research-Driven Product Strategy</div>
       <div class="proj-name">AI 研究寫作全攻略</div>
@@ -53,7 +53,7 @@
         <div class="proj-arrow">View Project →</div>
       </div>
     </div>
-    <div class="project-card reveal" onclick="openModal(1)" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal(1)}">
+    <div class="project-card reveal" data-modal-index="1" role="button" tabindex="0">
       <div class="proj-num">Project 002</div>
       <div class="proj-capability">Accessibility-First LLM Learning Experience</div>
       <div class="proj-name">從頭打造 LLM 模型</div>
@@ -63,7 +63,7 @@
         <div class="proj-arrow">View Project →</div>
       </div>
     </div>
-    <div class="project-card reveal" onclick="openModal(2)" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal(2)}">
+    <div class="project-card reveal" data-modal-index="2" role="button" tabindex="0">
       <div class="proj-num">Project 003</div>
       <div class="proj-capability">Human-in-the-loop Editorial Workflow</div>
       <div class="proj-name">人機協作編修 workflow</div>
@@ -98,9 +98,9 @@
         <li><span class="skill-name">Cross-functional Collaboration</span><span class="skill-num">06</span></li>
         <li><span class="skill-name">Project Management</span><span class="skill-num">07</span></li>
       </ul>
-      <div style="margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--divider);">
-        <div style="font-family:var(--display);font-size:.6rem;text-transform:uppercase;letter-spacing:.15em;color:var(--accent);margin-bottom:.75rem;">Tools &amp; Software</div>
-        <div style="display:flex;flex-wrap:wrap;gap:.4rem;">
+      <div class="tools-block">
+        <div class="tools-label">Tools &amp; Software</div>
+        <div class="tools-chips">
           <span class="m-chip">Claude</span><span class="m-chip">ChatGPT</span><span class="m-chip">NotebookLM</span><span class="m-chip">SPSS</span><span class="m-chip">JASP</span>
         </div>
       </div>
@@ -115,12 +115,12 @@
     <span class="section-title-label">Contact</span>
   </div>
   <div class="contact-big reveal"><div>Let's</div><div class="outline">Connect</div></div>
-  <div class="reveal" style="margin-bottom:2.5rem;">
-    <p style="font-size:.82rem;line-height:1.9;opacity:.75;word-break:keep-all;">I'm open to roles in Product Strategy, Senior UX Research, and AI-enabled product experiences.</p>
-    <p style="font-size:.82rem;line-height:1.9;opacity:.75;word-break:keep-all;">I'd love to connect with teams building thoughtful, useful, and human-centered products.</p>
+  <div class="reveal contact-intro">
+    <p class="contact-intro-text">I'm open to roles in Product Strategy, Senior UX Research, and AI-enabled product experiences.</p>
+    <p class="contact-intro-text">I'd love to connect with teams building thoughtful, useful, and human-centered products.</p>
   </div>
   <div class="contact-row reveal">
-    <div style="display:flex;flex-direction:column;gap:.75rem;">
+    <div class="contact-links-col">
       <a href="https://www.linkedin.com/in/ssu-min-chang-jasmine13" target="_blank" rel="noopener noreferrer" class="contact-link"><span class="contact-badge">LinkedIn</span>ssu-min-chang-jasmine13</a>
       <a href="https://orcid.org/0009-0008-1220-9502" target="_blank" rel="noopener noreferrer" class="contact-link"><span class="contact-badge">ORCID</span>0009-0008-1220-9502</a>
     </div>
@@ -129,7 +129,7 @@
 </section>
 
 <!-- MODAL CONTAINER: starts empty; script.js fills #modal-box with the selected project. -->
-<div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
+<div class="modal-overlay" id="modal">
   <div class="modal" id="modal-box"></div>
 </div>
 

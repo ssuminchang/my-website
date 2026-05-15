@@ -263,7 +263,7 @@ section{
 
 .projects-grid{
   display:grid;
-  grid-template-columns:1fr 1fr 1fr;
+  grid-template-columns:repeat(3, 1fr);
   border-top:var(--border);
 }
 
@@ -654,7 +654,7 @@ section{
 
 .collaboration-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: .6rem;
   margin-top: .75rem;
 }
@@ -666,11 +666,11 @@ section{
 }
 
 .outcome-grid-2 {
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .outcome-grid-3 {
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .m-bullet-list{
@@ -970,6 +970,421 @@ section{
   transform:none;
 }
 
+/* Tools block inside About section (replaces inline styles). */
+
+.tools-block {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--divider);
+}
+
+.tools-label {
+  font-family: var(--display);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  color: var(--accent);
+  margin-bottom: .75rem;
+}
+
+.tools-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+}
+
+/* Contact intro text block (replaces inline styles). */
+
+.contact-intro {
+  margin-bottom: 2.5rem;
+}
+
+.contact-intro-text {
+  font-size: .82rem;
+  line-height: 1.9;
+  opacity: .75;
+  word-break: keep-all;
+}
+
+/* Contact links column (replaces inline styles). */
+
+.contact-links-col {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+
+/*
+  ─── Modal component classes ───────────────────────────────────────────────────
+  These replace the inline styles that used to be generated inside script.js.
+  Editing rule: change visual appearance here; keep script.js for content only.
+*/
+
+/* Positioning / strategy translation block */
+
+.positioning-text{
+  font-family:var(--display);
+  font-size:var(--text-lg);
+  font-weight:700;
+  line-height:1.5;
+  color:var(--primary);
+  border-left:3px solid var(--primary);
+  padding:.75rem 1rem;
+  background:var(--surface-warm);
+  margin:.75rem 0;
+}
+
+/* Divider between "Strategy Translation" and "Design & Execution" */
+
+.section-divider{
+  display:flex;
+  align-items:center;
+  gap:.75rem;
+  margin:1rem 0;
+}
+
+.section-divider-line{
+  flex:1;
+  height:1px;
+  background:var(--divider);
+}
+
+.section-divider-label{
+  font-family:var(--display);
+  font-size:var(--text-xs);
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:var(--primary-soft);
+  white-space:nowrap;
+}
+
+/* Design principles grid */
+
+.principles-grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:.6rem;
+  margin-top:.75rem;
+}
+
+.principle-card{
+  border:1px solid var(--divider);
+  padding:.85rem 1rem;
+  background:var(--surface-warm);
+}
+
+.principle-name{
+  font-family:var(--display);
+  font-size:var(--text-body-sm);
+  font-weight:700;
+  margin-bottom:.2rem;
+}
+
+.principle-sub{
+  font-size:var(--text-xs);
+  color:var(--primary-soft);
+  margin-bottom:.4rem;
+}
+
+.principle-footer{
+  font-size:var(--text-body-sm);
+  line-height:1.7;
+  opacity:.65;
+  border-top:1px solid var(--divider);
+  padding-top:.75rem;
+  margin-top:.75rem;
+}
+
+/* Collaboration model cards */
+
+.col-card{
+  padding:.85rem 1rem;
+  display:flex;
+  flex-direction:column;
+  gap:.35rem;
+}
+
+.col-card--neutral{
+  border:1px solid var(--divider);
+  background:var(--surface-warm);
+}
+
+.col-card--primary{
+  border:1px solid var(--primary);
+  background:var(--primary);
+  color:var(--surface);
+}
+
+.col-card--highlight{
+  border:1px solid var(--divider);
+  background:var(--highlight);
+}
+
+.col-card-icon{
+  font-family:var(--display);
+  font-size:var(--text-2xl);
+  font-weight:900;
+  line-height:1;
+  margin-bottom:.2rem;
+}
+
+.col-card--primary .col-card-icon{
+  color:var(--highlight);
+}
+
+.col-card-name{
+  font-family:var(--display);
+  font-size:var(--text-body-sm);
+  font-weight:700;
+}
+
+.col-card-sub{
+  font-size:var(--text-xs);
+  opacity:.65;
+  margin-bottom:.2rem;
+}
+
+/* Keeps spacing even when col-card-sub is absent */
+.col-card-sub-spacer{
+  height:1.1em;
+}
+
+.col-card-item{
+  font-size:var(--text-xs);
+  line-height:1.6;
+  opacity:.85;
+}
+
+.collaboration-notes{
+  margin-top:.75rem;
+  display:flex;
+  flex-direction:column;
+  gap:.4rem;
+}
+
+.collaboration-note{
+  font-size:var(--text-body-sm);
+  line-height:1.7;
+  opacity:.65;
+  padding-left:.85rem;
+  border-left:2px solid var(--divider);
+}
+
+/* Shared infrastructure cards */
+
+.infra-card{
+  border:1px solid var(--divider);
+  padding:.85rem 1rem;
+  background:var(--surface-warm);
+}
+
+.infra-card-name{
+  font-family:var(--display);
+  font-size:var(--text-body-sm);
+  font-weight:700;
+  margin-bottom:.4rem;
+}
+
+/* Six-phase workflow list */
+
+.phases-list{
+  display:flex;
+  flex-direction:column;
+  margin-top:.75rem;
+}
+
+.phase-item{
+  display:flex;
+  gap:.75rem;
+}
+
+.phase-connector{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  flex-shrink:0;
+}
+
+.phase-dot{
+  width:1.6rem;
+  height:1.6rem;
+  border-radius:50%;
+  background:var(--primary);
+  color:var(--surface);
+  font-family:var(--display);
+  font-size:var(--text-xs);
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+
+.phase-line{
+  width:2px;
+  flex:1;
+  background:var(--divider);
+  min-height:.75rem;
+}
+
+.phase-content{
+  padding-bottom:1rem;
+  flex:1;
+  padding-top:.15rem;
+}
+
+.phase-content--last{
+  padding-bottom:0;
+}
+
+.phase-header{
+  display:flex;
+  align-items:baseline;
+  flex-wrap:wrap;
+  gap:.5rem;
+  margin-bottom:.3rem;
+}
+
+.phase-title{
+  font-family:var(--display);
+  font-size:var(--text-body-sm);
+  font-weight:700;
+}
+
+.phase-tool{
+  font-size:var(--text-xs);
+  color:var(--primary-soft);
+  opacity:.8;
+}
+
+.phase-desc{
+  font-size:var(--text-body-sm);
+  line-height:1.7;
+  opacity:.65;
+}
+
+/* Strategy execution cards */
+
+.execution-grid{
+  display:flex;
+  flex-direction:column;
+  gap:.6rem;
+  margin-top:.75rem;
+}
+
+.execution-card{
+  border:1px solid var(--divider);
+  padding:.85rem 1rem;
+  background:var(--surface-warm);
+}
+
+.execution-card-name{
+  font-family:var(--display);
+  font-size:var(--text-body-sm);
+  font-weight:700;
+  margin-bottom:.3rem;
+}
+
+.execution-card-body{
+  font-size:var(--text-body-sm);
+  line-height:1.7;
+  opacity:.7;
+  margin-bottom:.4rem;
+}
+
+/* Outcome groups */
+
+.outcome-group{
+  border:1px solid var(--divider);
+  padding:.85rem 1rem;
+  background:var(--surface-warm);
+}
+
+.outcome-group--hi{
+  border-color:var(--primary);
+  background:var(--primary);
+  color:var(--surface);
+}
+
+.outcome-group-label{
+  font-family:var(--display);
+  font-size:var(--text-xs);
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  color:var(--primary-soft);
+  margin-bottom:.5rem;
+}
+
+.outcome-group-label--hi{
+  color:var(--highlight);
+}
+
+.outcome-item{
+  font-size:var(--text-body-sm);
+  line-height:1.7;
+  opacity:.8;
+}
+
+.outcome-item--hi{
+  opacity:1;
+}
+
+.outcome-chip{
+  font-size:var(--text-xs);
+  padding:.2rem .55rem;
+  border:1px solid var(--divider);
+  opacity:.8;
+}
+
+.outcome-chip--hi{
+  border-color:rgba(255,255,255,.35);
+  opacity:1;
+}
+
+/* Role / tag groups */
+
+.role-block{
+  margin-top:1rem;
+}
+
+.role-block-label{
+  font-family:var(--display);
+  font-size:var(--text-xs);
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:var(--primary-soft);
+  margin-bottom:.5rem;
+}
+
+.role-block-groups{
+  display:flex;
+  flex-direction:column;
+  gap:.5rem;
+}
+
+.tag-group{
+  display:flex;
+  align-items:baseline;
+  flex-wrap:wrap;
+  gap:.4rem;
+}
+
+.tag-group-label{
+  font-size:var(--text-xs);
+  opacity:.5;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  margin-right:.3rem;
+  white-space:nowrap;
+}
+
+.tag-group-items{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.35rem;
+}
+
 /* Mobile overrides: these styles apply at 768px wide and below. */
 
 @media (max-width:768px){
@@ -1149,10 +1564,6 @@ section{
     justify-content:center;
   }
 
-  .modal [style*="grid-template-columns:1fr 1fr"],.modal [style*="grid-template-columns:1fr 1fr 1fr"],.modal [style*="grid-template-columns: 1fr 1fr"],.modal [style*="grid-template-columns: 1fr 1fr 1fr"]{
-    grid-template-columns:1fr;
-  }
-
   #hero{
     min-height:82vh;
     min-height:82svh;
@@ -1220,5 +1631,22 @@ section{
 
   .project-card:hover .proj-tags{
     color:var(--highlight);
+  }
+
+  /* Collapse all multi-column modal grids to single column on mobile */
+
+  .principles-grid,
+  .collaboration-grid,
+  .outcome-grid-2,
+  .outcome-grid-3{
+    grid-template-columns:1fr;
+  }
+
+  /* Tighten phase connector spacing */
+
+  .phase-dot{
+    width:1.35rem;
+    height:1.35rem;
+    font-size:.6rem;
   }
 }

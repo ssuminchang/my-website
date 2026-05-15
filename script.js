@@ -14,10 +14,16 @@
   - To change card text on the main page, edit index.html.
   - To change how things look, edit style.css.
 */
-// Custom cursor element used on desktop.
-var cur = document.getElementById('cursor');
+
+// ─── Cached DOM references ────────────────────────────────────────────────────
+// Queried once at startup; reused everywhere to avoid repeated getElementById calls.
+const cur          = document.getElementById('cursor');
+const modalOverlay = document.getElementById('modal');
+const modalBox     = document.getElementById('modal-box');
+
+// ─── Project data ─────────────────────────────────────────────────────────────
 // Project 001 data. The modal content is generated from this object.
-var P1 = {
+const P1 = {
     num: "Project 001", name: "AI 研究寫作全攻略",
     subtitle: "NotebookLM x Gemini x ChatGPT x Perplexity",
     tagGroups: [
@@ -90,8 +96,9 @@ var P1 = {
             { label: "組織影響", items: ["開拓公司未曾經營的新受眾", "建立後續「AI 支援決策」相關產品的參考框架", "促進公司以相同架構，展開理財類型專案"] }
         ] }
 };
+
 // Project 002 data. Keep the same structure as P1 so renderModal can reuse the same template.
-var P2 = {
+const P2 = {
     num: "Project 002", name: "從頭打造 LLM 模型",
     subtitle: "原書：Build a Large Language Model (From Scratch) by Sebastian Raschka",
     tagGroups: [
@@ -154,8 +161,9 @@ var P2 = {
             { label: "商業成果", items: ["上市 2 個月即達成年度毛利目標 100%", "上市初期進入各大通路 Top 3", "專案績效超過部門平均值 250%"], highlight: true }
         ] }
 };
+
 // Project 003 data. Keep the same structure as P1/P2.
-var P3 = {
+const P3 = {
     num: "Project 003", name: "人機協作編修 workflow",
     subtitle: "Python scripts + LLM subagents + Human checkpoints",
     tagGroups: [
@@ -235,241 +243,337 @@ var P3 = {
                 chips: ["#通用原則", "#專有名詞對照表", "#敘事句式、節奏與語氣規範", "#標點符號風格", "#章節結構與標題層級規範", "#程式碼標註慣例", "#翻譯腔修正規範", "#AI 腔修正規範"] }
         ] }
 };
+
 // Project order. openModal(0) opens P1, openModal(1) opens P2, etc.
-var projects = [P1, P2, P3];
+const projects = [P1, P2, P3];
+
+// ─── HTML builders ────────────────────────────────────────────────────────────
+// Each function returns an HTML string for one UI component.
+// Class names map directly to rules in style.css — no inline styles here.
+
 // Builds the Research → Insight → Outcome flow block inside each modal.
 function buildFlowHtml(steps) {
-    var h = '<div class="flow-block"><div class="flow-label">Research-Driven Product Strategy</div><div class="flow-steps">';
-    for (var i = 0; i < steps.length; i++) {
-        h += '<div class="flow-step"><span class="flow-step-tag">' + steps[i].tag + '</span><span class="flow-step-body">' + steps[i].body + '</span></div>';
-        if (i < steps.length - 1)
-            h += '<div class="flow-arrow">↓</div>';
-    }
-    return h + '</div></div>';
+    const stepsHtml = steps.map((step, i) => `
+        <div class="flow-step">
+            <span class="flow-step-tag">${step.tag}</span>
+            <span class="flow-step-body">${step.body}</span>
+        </div>
+        ${i < steps.length - 1 ? '<div class="flow-arrow">↓</div>' : ''}
+    `).join('');
+
+    return `
+        <div class="flow-block">
+            <div class="flow-label">Research-Driven Product Strategy</div>
+            <div class="flow-steps">${stepsHtml}</div>
+        </div>
+    `;
 }
+
 // Builds each case-study section based on the data format provided in P1/P2/P3.sections.
 function renderSection(s) {
-    var inner = s.body ? '<p class="m-body">' + s.body + '</p>' : '';
+    let inner = s.body ? `<p class="m-body">${s.body}</p>` : '';
+
     if (s.bullets) {
-        inner += '<ul class="m-bullet-list">';
-        for (var i = 0; i < s.bullets.length; i++)
-            inner += '<li>' + s.bullets[i] + '</li>';
-        inner += '</ul>';
+        const items = s.bullets.map(b => `<li>${b}</li>`).join('');
+        inner += `<ul class="m-bullet-list">${items}</ul>`;
     }
+
     if (s.bulletTags) {
-        inner += '<ul class="m-bullet-list">';
-        for (var i = 0; i < s.bulletTags.length; i++) {
-            var b = s.bulletTags[i];
-            var chips = '';
-            for (var j = 0; j < b.tags.length; j++)
-                chips += '<span class="m-chip">' + b.tags[j] + '</span>';
-            inner += '<li><div><div class="bullet-text">' + b.text + '</div>' + (chips ? '<div class="m-chips">' + chips + '</div>' : '') + '</div></li>';
-        }
-        inner += '</ul>';
+        const items = s.bulletTags.map(b => {
+            const chips = b.tags.map(tag => `<span class="m-chip">${tag}</span>`).join('');
+            return `
+                <li>
+                    <div>
+                        <div class="bullet-text">${b.text}</div>
+                        ${chips ? `<div class="m-chips">${chips}</div>` : ''}
+                    </div>
+                </li>`;
+        }).join('');
+        inner += `<ul class="m-bullet-list">${items}</ul>`;
     }
+
     if (s.chips) {
-        inner += '<div class="m-chips">';
-        for (var i = 0; i < s.chips.length; i++)
-            inner += '<span class="m-chip">' + s.chips[i] + '</span>';
-        inner += '</div>';
+        const chips = s.chips.map(c => `<span class="m-chip">${c}</span>`).join('');
+        inner += `<div class="m-chips">${chips}</div>`;
     }
+
     if (s.positioning) {
-        inner += '<div style="font-family:var(--display);font-size:var(--text-2xl-plus);font-weight:900;line-height:1.4;margin-top:.5rem;letter-spacing:-.02em;">' + s.positioning + '</div>';
-        if (s.divider)
-            inner += '<div style="margin-top:1.5rem;display:flex;align-items:center;gap:1rem;"><div style="flex:1;height:2px;background:var(--text);"></div><div style="font-family:var(--display);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.2em;white-space:nowrap;color:var(--primary-soft);">Design & Execution →</div><div style="flex:1;height:2px;background:var(--text);"></div></div>';
+        inner += `<div class="positioning-text">${s.positioning}</div>`;
+        if (s.divider) {
+            inner += `
+                <div class="section-divider">
+                    <div class="section-divider-line"></div>
+                    <div class="section-divider-label">Design & Execution →</div>
+                    <div class="section-divider-line"></div>
+                </div>`;
+        }
     }
+
     if (s.principles) {
-        inner += '<div style="display:grid;gap:.6rem;margin-top:.75rem;">';
-        for (var i = 0; i < s.principles.length; i++) {
-            var pr = s.principles[i];
-            var ptags = '';
-            for (var j = 0; j < pr.tags.length; j++)
-                ptags += '<span class="m-chip">' + pr.tags[j] + '</span>';
-            inner += '<div style="border:1px solid var(--divider);padding:.85rem 1rem;background:var(--surface-warm);"><div style="font-family:var(--display);font-size:var(--text-body);font-weight:900;text-transform:uppercase;">' + pr.name + '</div><div style="font-family:var(--display);font-size:var(--text-xs);opacity:.5;text-transform:uppercase;letter-spacing:.08em;margin:.2rem 0 .5rem;">' + pr.sub + '</div><div class="m-chips">' + ptags + '</div></div>';
+        const cards = s.principles.map(pr => {
+            const ptags = pr.tags.map(tag => `<span class="m-chip">${tag}</span>`).join('');
+            return `
+                <div class="principle-card">
+                    <div class="principle-name">${pr.name}</div>
+                    <div class="principle-sub">${pr.sub}</div>
+                    <div class="m-chips">${ptags}</div>
+                </div>`;
+        }).join('');
+        inner += `<div class="principles-grid">${cards}</div>`;
+        if (s.principleFooter) {
+            inner += `<div class="principle-footer">${s.principleFooter}</div>`;
         }
-        inner += '</div>';
-        if (s.principleFooter)
-            inner += '<div style="margin-top:1rem;padding:1rem;background:var(--primary);color:var(--surface);font-size:var(--text-body-sm);line-height:1.7;">' + s.principleFooter + '</div>';
     }
+
     if (s.collaboration) {
-        var colStyles = [
-            { bg: 'var(--surface-warm)', color: 'var(--text)', border: 'var(--divider)', lc: 'var(--primary-soft)' },
-            { bg: 'var(--primary)', color: 'var(--surface)', border: 'var(--primary)', lc: 'var(--highlight)' },
-            { bg: 'var(--highlight)', color: 'var(--text)', border: 'var(--highlight-border)', lc: 'var(--highlight-text)' }
-        ];
-      inner += '<div class="collaboration-grid">';  
-        for (var i = 0; i < s.collaboration.length; i++) {
-            var c = s.collaboration[i];
-            var st = colStyles[i];
-            var citems = '';
-            for (var j = 0; j < c.items.length; j++)
-                citems += '<div style="font-size:var(--text-md-plus);line-height:1.7;padding:.25rem 0;border-bottom:1px solid var(--line-neutral);opacity:.85;">→ ' + c.items[j] + '</div>';
-            inner += '<div style="border:1px solid ' + st.border + ';padding:1.25rem 1rem;background:' + st.bg + ';color:' + st.color + ';"><div style="font-family:var(--display);font-size:var(--text-project-title);font-weight:900;margin-bottom:.2rem;color:' + st.lc + ';">' + c.icon + '</div><div style="font-family:var(--display);font-size:var(--text-subtitle);font-weight:900;text-transform:uppercase;">' + c.name + '</div>' + (c.sub ? '<div style="font-family:var(--display);font-size:var(--text-3xs);text-transform:uppercase;letter-spacing:.08em;opacity:.6;margin-bottom:.75rem;">' + c.sub + '</div>' : '<div style="margin-bottom:.75rem;"></div>') + citems + '</div>';
-        }
-        inner += '</div>';
+        // Three roles always map to the same three visual styles defined in CSS.
+        const colStyleClasses = ['col-card--neutral', 'col-card--primary', 'col-card--highlight'];
+        const cards = s.collaboration.map((c, i) => {
+            const citems = c.items.map(item => `<div class="col-card-item">→ ${item}</div>`).join('');
+            return `
+                <div class="col-card ${colStyleClasses[i]}">
+                    <div class="col-card-icon">${c.icon}</div>
+                    <div class="col-card-name">${c.name}</div>
+                    ${c.sub ? `<div class="col-card-sub">${c.sub}</div>` : '<div class="col-card-sub-spacer"></div>'}
+                    ${citems}
+                </div>`;
+        }).join('');
+        inner += `<div class="collaboration-grid">${cards}</div>`;
+
         if (s.collaborationNotes) {
-            inner += '<div style="margin-top:.75rem;display:grid;gap:.4rem;">';
-            for (var i = 0; i < s.collaborationNotes.length; i++) {
-                inner += '<div style="font-size:var(--text-label);line-height:1.7;padding:.5rem .75rem;border-left:2px solid var(--divider);opacity:.7;">' + s.collaborationNotes[i] + '</div>';
-            }
-            inner += '</div>';
+            const notes = s.collaborationNotes
+                .map(note => `<div class="collaboration-note">${note}</div>`)
+                .join('');
+            inner += `<div class="collaboration-notes">${notes}</div>`;
         }
     }
+
     if (s.infraGroups) {
-        inner += '<div class="outcome-grid outcome-grid-3">';
-        for (var i = 0; i < s.infraGroups.length; i++) {
-            var g = s.infraGroups[i];
-            var gtags = '';
-            for (var j = 0; j < g.tags.length; j++)
-                gtags += '<span class="m-chip">' + g.tags[j] + '</span>';
-            inner += '<div style="border:1px solid var(--divider);padding:1rem;"><div style="font-family:var(--display);font-size:var(--text-label);font-weight:900;text-transform:uppercase;margin-bottom:.75rem;color:var(--primary-soft);">' + g.name + '</div><div class="m-chips">' + gtags + '</div></div>';
-        }
-        inner += '</div>';
+        const cards = s.infraGroups.map(g => {
+            const gtags = g.tags.map(tag => `<span class="m-chip">${tag}</span>`).join('');
+            return `
+                <div class="infra-card">
+                    <div class="infra-card-name">${g.name}</div>
+                    <div class="m-chips">${gtags}</div>
+                </div>`;
+        }).join('');
+        inner += `<div class="outcome-grid outcome-grid-3">${cards}</div>`;
     }
+
     if (s.phases) {
-        inner += '<div style="margin-top:.75rem;">';
-        for (var i = 0; i < s.phases.length; i++) {
-            var ph = s.phases[i];
-            var isLast = i === s.phases.length - 1;
-            inner += '<div style="display:flex;align-items:stretch;"><div style="display:flex;flex-direction:column;align-items:center;width:2.5rem;flex-shrink:0;"><div style="width:2rem;height:2rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:var(--text-md);font-weight:900;background:var(--text);color:var(--surface);flex-shrink:0;">' + ph.id + '</div>' + (!isLast ? '<div style="width:2px;flex:1;background:var(--divider);margin:.2rem 0;"></div>' : '') + '</div><div style="flex:1;padding:.4rem 0 ' + (isLast ? '0' : '1.2rem') + ' 1rem;"><div style="display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-bottom:.3rem;"><span style="font-family:var(--display);font-size:var(--text-subtitle);font-weight:900;">Phase ' + ph.id + '｜' + ph.name + '</span><span style="font-family:var(--display);font-size:var(--text-3xs);text-transform:uppercase;letter-spacing:.08em;padding:.15rem .45rem;border:1px solid var(--divider);color:var(--primary-soft);">' + ph.tool + '</span></div><div style="font-size:var(--text-label);line-height:1.7;opacity:.7;">' + ph.desc + '</div></div></div>';
-        }
-        inner += '</div>';
+        const phaseItems = s.phases.map((ph, i) => {
+            const isLast = i === s.phases.length - 1;
+            return `
+                <div class="phase-item">
+                    <div class="phase-connector">
+                        <div class="phase-dot">${ph.id}</div>
+                        ${!isLast ? '<div class="phase-line"></div>' : ''}
+                    </div>
+                    <div class="phase-content${isLast ? ' phase-content--last' : ''}">
+                        <div class="phase-header">
+                            <span class="phase-title">Phase ${ph.id}｜${ph.name}</span>
+                            <span class="phase-tool">${ph.tool}</span>
+                        </div>
+                        <div class="phase-desc">${ph.desc}</div>
+                    </div>
+                </div>`;
+        }).join('');
+        inner += `<div class="phases-list">${phaseItems}</div>`;
     }
+
     if (s.execution) {
-        inner += '<div style="display:grid;gap:.6rem;margin-top:.75rem;">';
-        for (var i = 0; i < s.execution.length; i++) {
-            var ex = s.execution[i];
-            var etags = '';
-            for (var j = 0; j < ex.tags.length; j++)
-                etags += '<span class="m-chip">' + ex.tags[j] + '</span>';
-            inner += '<div style="border:1px solid var(--divider);padding:.85rem 1rem;"><div style="font-family:var(--display);font-size:var(--text-body);font-weight:900;text-transform:uppercase;margin-bottom:.35rem;">' + ex.name + '</div><div style="font-size:var(--text-label);line-height:1.7;opacity:.7;margin-bottom:.5rem;">' + ex.body + '</div><div class="m-chips">' + etags + '</div></div>';
-        }
-        inner += '</div>';
+        const cards = s.execution.map(ex => {
+            const etags = ex.tags.map(tag => `<span class="m-chip">${tag}</span>`).join('');
+            return `
+                <div class="execution-card">
+                    <div class="execution-card-name">${ex.name}</div>
+                    <div class="execution-card-body">${ex.body}</div>
+                    <div class="m-chips">${etags}</div>
+                </div>`;
+        }).join('');
+        inner += `<div class="execution-grid">${cards}</div>`;
     }
-    return '<div class="m-section"><div class="m-sec-label">' + s.label + '</div><div class="m-sec-title">' + s.title + '</div>' + inner + '</div>';
+
+    return `
+        <div class="m-section">
+            <div class="m-sec-label">${s.label}</div>
+            <div class="m-sec-title">${s.title}</div>
+            ${inner}
+        </div>`;
 }
+
 // Combines project data into the full modal HTML.
 function renderModal(p) {
-    var tldrHtml = '';
-    for (var i = 0; i < p.tldr.length; i++) {
-        var t = p.tldr[i];
-        tldrHtml += '<div><div class="tldr-key">' + t.key + '</div><div class="tldr-val' + (t.accent ? ' accent' : '') + '">' + t.val + '</div></div>';
-    }
-    var tagsHtml = '';
+    // TL;DR rows
+    const tldrHtml = p.tldr.map(t => `
+        <div>
+            <div class="tldr-key">${t.key}</div>
+            <div class="tldr-val${t.accent ? ' accent' : ''}">${t.val}</div>
+        </div>`
+    ).join('');
+
+    // Role tag groups
+    let tagsHtml = '';
     if (p.tagGroups) {
-        tagsHtml = '<div style="margin-top:1.2rem;"><div style="font-family:var(--display);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.15em;color:var(--primary-soft);margin-bottom:.75rem;">My Role</div><div style="display:flex;flex-wrap:wrap;gap:.75rem;align-items:flex-start;">';
-        for (var i = 0; i < p.tagGroups.length; i++) {
-            var g = p.tagGroups[i];
-            var items = '';
-            for (var j = 0; j < g.items.length; j++)
-                items += '<span class="m-tag' + (g.hi ? ' hi' : '') + '">' + g.items[j] + '</span>';
-            tagsHtml += '<div style="display:flex;flex-direction:column;gap:.4rem;"><div style="font-family:var(--display);font-size:var(--text-3xs);text-transform:uppercase;letter-spacing:.12em;opacity:.45;">' + g.label + '</div><div style="display:flex;flex-wrap:wrap;gap:.4rem;">' + items + '</div></div>';
-        }
-        tagsHtml += '</div></div>';
+        const groups = p.tagGroups.map(g => {
+            const items = g.items
+                .map(item => `<span class="m-tag${g.hi ? ' hi' : ''}">${item}</span>`)
+                .join('');
+            return `
+                <div class="tag-group">
+                    <div class="tag-group-label">${g.label}</div>
+                    <div class="tag-group-items">${items}</div>
+                </div>`;
+        }).join('');
+        tagsHtml = `
+            <div class="role-block">
+                <div class="role-block-label">My Role</div>
+                <div class="role-block-groups">${groups}</div>
+            </div>`;
     }
-    var o = p.outcome;
-    var outcomeHtml = '';
-    var gHtml = '';
+
+    // Outcome groups
+    const o = p.outcome;
+    let outcomeHtml = '';
     if (o.custom) {
-        for (var i = 0; i < o.groups.length; i++) {
-            var g = o.groups[i];
-            var hi = g.highlight;
-            var iHtml = '';
-            for (var j = 0; j < g.items.length; j++)
-                iHtml += '<div style="font-size:var(--text-label);line-height:1.7;padding:.3rem 0;border-bottom:1px solid ' + (hi ? 'var(--line-on-primary)' : 'var(--line-subtle)') + ';opacity:' + (hi ? '.9' : '.75') + ';">— ' + g.items[j] + '</div>';
-            gHtml += '<div style="padding:1.25rem 1rem;border:' + (hi ? '2px solid var(--text)' : '1px solid var(--divider)') + ';background:' + (hi ? 'var(--primary)' : 'transparent') + ';color:' + (hi ? 'var(--surface)' : 'var(--text)') + ';"><div style="font-family:var(--display);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.15em;color:' + (hi ? 'var(--highlight)' : 'var(--primary-soft)') + ';margin-bottom:.6rem;">' + (i + 1) + '. ' + g.label + '</div>' + iHtml + (g.chips ? '<div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem;">' + g.chips.map(function (c) { return '<span style="font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.08em;padding:.2rem .55rem;border:1px solid var(--hover-border-muted);color:var(--surface);">' + c + '</span>'; }).join('') + '</div>' : '') + '</div>';
-        }
-        
-      outcomeHtml = '<div class="m-section"><div class="m-sec-label">Execution Outcome</div><div class="m-sec-title">執行成果</div><div class="outcome-grid ' + (o.groups.length === 3 ? 'outcome-grid-3' : 'outcome-grid-2') + '">' + gHtml + '</div></div>';
+        const gHtml = o.groups.map((g, i) => {
+            const hi = g.highlight;
+            const iHtml = g.items
+                .map(item => `<div class="outcome-item${hi ? ' outcome-item--hi' : ''}">— ${item}</div>`)
+                .join('');
+            const chipsHtml = g.chips
+                ? `<div class="m-chips">${g.chips.map(c => `<span class="outcome-chip${hi ? ' outcome-chip--hi' : ''}">${c}</span>`).join('')}</div>`
+                : '';
+            return `
+                <div class="outcome-group${hi ? ' outcome-group--hi' : ''}">
+                    <div class="outcome-group-label${hi ? ' outcome-group-label--hi' : ''}">${i + 1}. ${g.label}</div>
+                    ${iHtml}
+                    ${chipsHtml}
+                </div>`;
+        }).join('');
+
+        const gridClass = o.groups.length === 3 ? 'outcome-grid-3' : 'outcome-grid-2';
+        outcomeHtml = `
+            <div class="m-section">
+                <div class="m-sec-label">Execution Outcome</div>
+                <div class="m-sec-title">執行成果</div>
+                <div class="outcome-grid ${gridClass}">${gHtml}</div>
+            </div>`;
     }
-    else {
-        outcomeHtml =
-          '<div class="m-section">' +
-          '<div class="m-sec-label">Execution Outcome</div>' +
-          '<div class="m-sec-title">執行成果</div>' +
-          '<div class="outcome-grid ' + (o.groups.length === 3 ? 'outcome-grid-3' : 'outcome-grid-2') + '">' + 
-            gHtml +
-          '</div>' +
-        '</div>';
-    }
-    var productHtml = '';
+
+    // Product block
+    // Visual rules live in style.css under "Product section inside modal".
+    // JS stays responsible for content only.
+    let productHtml = '';
     if (p.product) {
-        // Product section is rendered with semantic class names.
-        // The visual rules live in style.css under "Product section inside modal".
-        // This keeps JavaScript responsible for content and CSS responsible for presentation.
-        var linksHtml = '';
-        for (var i = 0; i < p.product.links.length; i++) {
-            var lnk = p.product.links[i];
-            linksHtml += '<a href="' + lnk.url + '" target="_blank" rel="noopener noreferrer" class="product-link">' + lnk.label + ' →</a>';
-        }
-        productHtml =
-            '<div class="m-section">' +
-                '<div class="m-sec-label">Product</div>' +
-                '<div class="product-panel">' +
-                '<div class="product-cover">' +
-                '<img src="' + p.product.img + '" alt="' + p.product.title + '" onerror="this.style.display=\'none\'">' +
-                '</div>' +
-                '<div class="product-info">' +
-                (p.product.subtitle ? '<div class="product-subtitle">' + p.product.subtitle + '</div>' : '') +
-                '<div class="product-title">' + p.product.title + '</div>' +
-                (p.product.desc ? '<p class="product-desc">' + p.product.desc + '</p>' : '') +
-                '<div class="product-links">' + linksHtml + '</div>' +
-                '</div>' +
-                '</div>' +
-                '</div>';
+        const linksHtml = p.product.links
+            .map(lnk => `<a href="${lnk.url}" target="_blank" rel="noopener noreferrer" class="product-link">${lnk.label} →</a>`)
+            .join('');
+        productHtml = `
+            <div class="m-section">
+                <div class="m-sec-label">Product</div>
+                <div class="product-panel">
+                    <div class="product-cover">
+                        <img src="${p.product.img}" alt="${p.product.title}" onerror="this.style.display='none'">
+                    </div>
+                    <div class="product-info">
+                        ${p.product.subtitle ? `<div class="product-subtitle">${p.product.subtitle}</div>` : ''}
+                        <div class="product-title">${p.product.title}</div>
+                        ${p.product.desc ? `<p class="product-desc">${p.product.desc}</p>` : ''}
+                        <div class="product-links">${linksHtml}</div>
+                    </div>
+                </div>
+            </div>`;
     }
-    var flowHtml = p.flowSteps ? buildFlowHtml(p.flowSteps) : '';
-    var sectionsHtml = '';
-    for (var i = 0; i < p.sections.length; i++)
-        sectionsHtml += renderSection(p.sections[i]);
-    document.getElementById('modal-box').innerHTML =
-        '<div class="modal-topbar"><span class="modal-proj-num">' + p.num + '</span><button class="modal-close" onclick="closeModal()">× Close</button></div>' +
-            '<div class="modal-hero"><div class="modal-name">' + p.name + '</div><div class="modal-subtitle">' + p.subtitle + '</div>' + tagsHtml + '</div>' +
-            '<div class="tldr-block"><div class="tldr-label">TL ; DR</div><div class="tldr-grid">' + tldrHtml + '</div></div>' +
-            flowHtml + '<div class="modal-sections">' + sectionsHtml + outcomeHtml + productHtml + '</div>';
+
+    const flowHtml     = p.flowSteps ? buildFlowHtml(p.flowSteps) : '';
+    const sectionsHtml = p.sections.map(renderSection).join('');
+
+    modalBox.innerHTML = `
+        <div class="modal-topbar">
+            <span class="modal-proj-num">${p.num}</span>
+            <button class="modal-close" onclick="closeModal()">× Close</button>
+        </div>
+        <div class="modal-hero">
+            <div class="modal-name">${p.name}</div>
+            <div class="modal-subtitle">${p.subtitle}</div>
+            ${tagsHtml}
+        </div>
+        <div class="tldr-block">
+            <div class="tldr-label">TL ; DR</div>
+            <div class="tldr-grid">${tldrHtml}</div>
+        </div>
+        ${flowHtml}
+        <div class="modal-sections">${sectionsHtml}${outcomeHtml}${productHtml}</div>`;
 }
-// Opens a modal for the project at index i.
+
+// ─── Modal controls ───────────────────────────────────────────────────────────
+
+// Opens a modal for the project at the given index.
 function openModal(i) {
-  renderModal(projects[i]);
-  var modalBox = document.getElementById('modal-box');
-  if (modalBox) {
+    renderModal(projects[i]);
     modalBox.scrollTop = 0;
-  }
-  document.getElementById('modal').classList.add('active');
-  document.body.style.overflow = 'hidden';
+    modalOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
+
 // Closes the modal and restores page scrolling.
-function closeModal() { document.getElementById('modal').classList.remove('active'); document.body.style.overflow = ''; }
-// Closes the modal when the user clicks the dark overlay, but not when clicking inside the modal box.
-function handleOverlayClick(e) {
-    if (e.target === document.getElementById('modal'))
-        closeModal();
+function closeModal() {
+    modalOverlay.classList.remove('active');
+    document.body.style.overflow = '';
 }
+
+// Closes the modal when the user clicks the dark overlay, but not inside the modal box.
+function handleOverlayClick(e) {
+    if (e.target === modalOverlay) closeModal();
+}
+
+modalOverlay.addEventListener('click', handleOverlayClick);
+
 // Keyboard support: pressing Escape closes the modal.
-document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape')
-        closeModal();
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
 });
-document.addEventListener('mousemove', function (e) { cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px'; });
-// Desktop cursor hover behavior.
-document.querySelectorAll('a,button,.project-card').forEach(function (el) {
-    el.addEventListener('mouseenter', function () { cur.classList.add('hover'); });
-    el.addEventListener('mouseleave', function () { cur.classList.remove('hover'); });
+
+// ─── Project card event binding ───────────────────────────────────────────────
+// Reads data-modal-index from each card — no inline onclick/onkeydown in HTML.
+document.querySelectorAll('.project-card').forEach(card => {
+    const index = parseInt(card.dataset.modalIndex, 10);
+    card.addEventListener('click', () => openModal(index));
+    card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openModal(index);
+        }
+    });
 });
-// Smooth scrolling for the nav links.
-document.querySelectorAll('.nav-links a').forEach(function (a) {
-    a.addEventListener('click', function (e) {
+
+// ─── Custom cursor ────────────────────────────────────────────────────────────
+document.addEventListener('mousemove', e => {
+    cur.style.left = `${e.clientX}px`;
+    cur.style.top  = `${e.clientY}px`;
+});
+
+document.querySelectorAll('a, button, .project-card').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('hover'));
+});
+
+// ─── Smooth scrolling ─────────────────────────────────────────────────────────
+document.querySelectorAll('.nav-links a').forEach(a => {
+    a.addEventListener('click', e => {
         e.preventDefault();
-        var t = document.querySelector(a.getAttribute('href'));
-        if (t)
-            t.scrollIntoView({ behavior: 'smooth' });
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
     });
 });
-// Scroll reveal animation. Adds .visible when elements enter the viewport.
-var obs = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-        if (e.isIntersecting)
-            e.target.classList.add('visible');
+
+// ─── Scroll reveal ────────────────────────────────────────────────────────────
+// Adds .visible to .reveal elements when they enter the viewport.
+const revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
     });
-}, { threshold: .15 });
-document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
